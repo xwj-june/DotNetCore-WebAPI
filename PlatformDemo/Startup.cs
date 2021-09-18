@@ -16,7 +16,7 @@ namespace PlatformDemo
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            //add the controller middleware dependency and use the default behavior
+            //2. Add the controller middleware dependency and use the default behavior
             services.AddControllers();
         }
 
@@ -32,7 +32,7 @@ namespace PlatformDemo
 
             app.UseEndpoints(endpoints =>
             {
-                //ues controller middleware
+                //1. Ues controller middleware
                 endpoints.MapControllers();
             });
         }
