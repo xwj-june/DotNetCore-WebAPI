@@ -28,49 +28,73 @@ namespace PlatformDemo.Controllers
         /// api/projects/{pid}/tickets?tid={tid}
         /// </summary>
         /// <returns></returns>
-        //[HttpGet]
-        //[Route("/api/projects/{pid}/tickets")]
-        ////api/project/45/tickets
-        ////api/project/45/tickets?tid=123
-        //public IActionResult GetProjectTIcket(int pId, [FromQuery] int tId) //[FromQuery] makes tId has to come from Query
-        //{
-        //    if (tId == 0)
-        //    {
-        //        return Ok($"Reading all tickets belong to project {pId}");
-        //    }
-        //    return Ok($"Reading project {pId}, ticket #{tId}");
-        //}
-
         [HttpGet]
         [Route("/api/projects/{pid}/tickets")]
-        //api/projects/45/tickets
-        //api/projects/45/tickets?tid=123
-        public IActionResult GetProjectTicket1([FromQuery]Ticket ticket)
-            //by defult, a complex type will look for values from HTTP request body
-            //[FromQuery] makes ticket has to come from Query, however, pid will still come from the route becuase the Ticket class will override it for pid
+        //api/project/45/tickets
+        //api/project/45/tickets?tid=123
+        public IActionResult GetProjectTIcket(int pId, [FromQuery] int tId) //[FromQuery] makes tId has to come from Query
         {
-            if (ticket == null)
+            if (tId == 0)
             {
-                return BadRequest("Parameters are not provided propertly");
+                return Ok($"Reading all tickets belong to project {pId}");
             }
-            if (ticket.TicketId == 0)
-            {
-                return Ok($"Reading all tickets belong to project {ticket.ProjectId}");
-            }
-            return Ok($"Reading project {ticket.ProjectId}, ticket #{ticket.TicketId},title: {ticket.Title}, description: {ticket.Description}");
+            return Ok($"Reading project {pId}, ticket #{tId}");
         }
+
+        #region no common - model binding for complex type from both Route and Query
+        //[HttpGet]
+        //[Route("/api/projects/{pid}/tickets")]
+        ////api/projects/45/tickets
+        ////api/projects/45/tickets?tid=123
+        //public IActionResult GetProjectTicket1([FromQuery]Ticket ticket)
+        //    //by defult, a complex type will look for values from HTTP request body
+        //    //[FromQuery] makes ticket has to come from Query, however, pid will still come from the route becuase the Ticket class will override it for pid
+        //{
+        //    if (ticket == null)
+        //    {
+        //        return BadRequest("Parameters are not provided propertly");
+        //    }
+        //    if (ticket.TicketId == 0)
+        //    {
+        //        return Ok($"Reading all tickets belong to project {ticket.ProjectId}");
+        //    }
+        //    return Ok($"Reading project {ticket.ProjectId}, ticket #{ticket.TicketId},title: {ticket.Title}, description: {ticket.Description}");
+        //}
+        #endregion
 
         [HttpPost]
-        public IActionResult Post()
+        public IActionResult Post([FromBody] Ticket ticket)
         {
-            return Ok("Creating a project.");
+            return Ok(ticket); // it will automaticlly serilize the object to json
         }
 
+        //test above in PowerShell
+        // $body =@{
+        // ProjectId=1
+        // Title = "This is a title"
+        // Description = "this is a desc"
+        // }
+        //$jsonBody = ConvertTo-Json -InputObject $body
+        //$Response = Invoke-RestMethod -Uri 'https://localhost:44314/api/tickets' -Method Post -ContentType 'application/json' -Body $jsonBody
+        //$Response
+
+
         [HttpPut]
-        public IActionResult Put()
+        public IActionResult Put([FromBody] Ticket ticket)
         {
-            return Ok("Updating a project");
+            return Ok(ticket);
         }
+
+        //test above in PowerShell
+        // $body =@{
+        // TicketId=100
+        // ProjectId=1
+        // Title = "This is a title"
+        // Description = "this is a desc"
+        // }
+        //$jsonBody = ConvertTo-Json -InputObject $body
+        //$Response = Invoke-RestMethod -Uri 'https://localhost:44314/api/tickets' -Method Put -ContentType 'application/json' -Body $jsonBody
+        //$Response
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
