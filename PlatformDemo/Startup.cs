@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PlatformDemo.Filters;
 
 namespace PlatformDemo
 {
@@ -17,7 +18,9 @@ namespace PlatformDemo
         public void ConfigureServices(IServiceCollection services)
         {
             //2. Add the controller middleware dependency and use the default behavior
-            services.AddControllers();
+            services.AddControllers(options=> {
+                options.Filters.Add<Version1DiscontinueResourceFilter>(); //apply filter globally
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

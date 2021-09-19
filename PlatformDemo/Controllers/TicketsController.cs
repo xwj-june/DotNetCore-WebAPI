@@ -11,6 +11,7 @@ namespace PlatformDemo.Controllers
     //3. inherits ContorllerBase and decorate with ApiController
     [ApiController]
     [Route("api/[controller]")] //attribute routing in Contorller
+    //[Version1DiscontinueResourceFilter] // only apply to this controller
     public class TicketsController : ControllerBase //ControllerBase contains everything needs for Web API controller
     {
         [HttpGet]
