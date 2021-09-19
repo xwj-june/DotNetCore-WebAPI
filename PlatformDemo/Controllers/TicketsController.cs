@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PlatformDemo.Filters;
 using PlatformDemo.Models;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,16 @@ namespace PlatformDemo.Controllers
 
         [HttpPost]
         //[Route("api/tickets")] //Attribute routing
-        public IActionResult Post([FromBody] Ticket ticket)
+        public IActionResult PostV1([FromBody] Ticket ticket)
+        {
+            return Ok(ticket); // it will automaticlly serilize the object to json
+        }
+
+        [HttpPost]
+        [Route("/api/v2/tickets")]
+        [Ticket_EnsureEnteredDate]
+        //[Route("api/tickets")] //Attribute routing
+        public IActionResult PostV2([FromBody] Ticket ticket)
         {
             return Ok(ticket); // it will automaticlly serilize the object to json
         }

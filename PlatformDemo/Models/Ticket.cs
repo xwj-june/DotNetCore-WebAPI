@@ -20,5 +20,6 @@ namespace PlatformDemo.Models
         [Ticket_EnsureDueDateForTicketOwner]
         [Ticket_EnsureDueDateInTheFuture]
         public DateTime? DueDate { get; set; }
+        public DateTime? EnteredDate { get; set; }
     }
 }
