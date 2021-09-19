@@ -40,7 +40,8 @@ namespace PlatformDemo.Controllers
 
         [HttpPost]
         [Route("/api/v2/tickets")]
-        [Ticket_EnsureEnteredDate]
+        //[Ticket_EnsureEnteredDate] //replaced by Ticket_ValidateDatesActionFilter
+        [Ticket_ValidateDatesActionFilter]
         //[Route("api/tickets")] //Attribute routing
         public IActionResult PostV2([FromBody] Ticket ticket)
         {
