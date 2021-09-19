@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PlatformDemo.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,17 +28,36 @@ namespace PlatformDemo.Controllers
         /// api/projects/{pid}/tickets?tid={tid}
         /// </summary>
         /// <returns></returns>
+        //[HttpGet]
+        //[Route("/api/projects/{pid}/tickets")]
+        ////api/project/45/tickets
+        ////api/project/45/tickets?tid=123
+        //public IActionResult GetProjectTIcket(int pId, [FromQuery] int tId) //[FromQuery] makes tId has to come from Query
+        //{
+        //    if (tId == 0)
+        //    {
+        //        return Ok($"Reading all tickets belong to project {pId}");
+        //    }
+        //    return Ok($"Reading project {pId}, ticket #{tId}");
+        //}
+
         [HttpGet]
         [Route("/api/projects/{pid}/tickets")]
-        //api/project/45/tickets
-        //api/project/45/tickets?tid=123
-        public IActionResult GetProjectTIcket(int pId, [FromQuery] int tId) //[FromQuery] makes tId has to come from Query
+        //api/projects/45/tickets
+        //api/projects/45/tickets?tid=123
+        public IActionResult GetProjectTicket1([FromQuery]Ticket ticket)
+            //by defult, a complex type will look for values from HTTP request body
+            //[FromQuery] makes ticket has to come from Query, however, pid will still come from the route becuase the Ticket class will override it for pid
         {
-            if (tId == 0)
+            if (ticket == null)
             {
-                return Ok($"Reading all tickets belong to project {pId}");
+                return BadRequest("Parameters are not provided propertly");
             }
-            return Ok($"Reading project {pId}, ticket #{tId}");
+            if (ticket.TicketId == 0)
+            {
+                return Ok($"Reading all tickets belong to project {ticket.ProjectId}");
+            }
+            return Ok($"Reading project {ticket.ProjectId}, ticket #{ticket.TicketId},title: {ticket.Title}, description: {ticket.Description}");
         }
 
         [HttpPost]
