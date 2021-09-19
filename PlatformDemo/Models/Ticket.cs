@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PlatformDemo.ModelValidations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,5 +16,9 @@ namespace PlatformDemo.Models
         [Required]
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Owner { get; set; }
+        [Ticket_EnsureDueDateForTicketOwner]
+        [Ticket_EnsureDueDateInTheFuture]
+        public DateTime? DueDate { get; set; }
     }
 }

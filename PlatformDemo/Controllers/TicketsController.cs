@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PlatformDemo.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,17 +31,40 @@ namespace PlatformDemo.Controllers
 
         [HttpPost]
         //[Route("api/tickets")] //Attribute routing
-        public IActionResult Post()
+        public IActionResult Post([FromBody] Ticket ticket)
         {
-            return Ok("Creating a ticket.");
+            return Ok(ticket); // it will automaticlly serilize the object to json
         }
+
+        //test above in PowerShell
+        // $body =@{
+        // ProjectId=1
+        // Title = "This is a title"
+        // Description = "this is a desc"
+        // }
+        //$jsonBody = ConvertTo-Json -InputObject $body
+        //$Response = Invoke-RestMethod -Uri 'https://localhost:44314/api/tickets' -Method Post -ContentType 'application/json' -Body $jsonBody
+        //$Response
+
 
         [HttpPut]
         //[Route("api/tickets")] //Attribute routing
-        public IActionResult Put()
+        public IActionResult Put([FromBody] Ticket ticket)
         {
-            return Ok("Updating a ticket");
+            return Ok(ticket);
         }
+
+
+        //test above in PowerShell
+        // $body =@{
+        // TicketId=100
+        // ProjectId=1
+        // Title = "This is a title"
+        // Description = "this is a desc"
+        // }
+        //$jsonBody = ConvertTo-Json -InputObject $body
+        //$Response = Invoke-RestMethod -Uri 'https://localhost:44314/api/tickets' -Method Put -ContentType 'application/json' -Body $jsonBody
+        //$Response
 
         [HttpDelete("{id}")]
         //[HttpDelete]

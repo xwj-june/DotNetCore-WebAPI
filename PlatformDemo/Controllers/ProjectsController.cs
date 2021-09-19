@@ -63,38 +63,16 @@ namespace PlatformDemo.Controllers
         #endregion
 
         [HttpPost]
-        public IActionResult Post([FromBody] Ticket ticket)
+        public IActionResult Post()
         {
-            return Ok(ticket); // it will automaticlly serilize the object to json
+            return Ok("Creating a project.");
         }
-
-        //test above in PowerShell
-        // $body =@{
-        // ProjectId=1
-        // Title = "This is a title"
-        // Description = "this is a desc"
-        // }
-        //$jsonBody = ConvertTo-Json -InputObject $body
-        //$Response = Invoke-RestMethod -Uri 'https://localhost:44314/api/tickets' -Method Post -ContentType 'application/json' -Body $jsonBody
-        //$Response
-
 
         [HttpPut]
-        public IActionResult Put([FromBody] Ticket ticket)
+        public IActionResult Put()
         {
-            return Ok(ticket);
+            return Ok("Updating a project");
         }
-
-        //test above in PowerShell
-        // $body =@{
-        // TicketId=100
-        // ProjectId=1
-        // Title = "This is a title"
-        // Description = "this is a desc"
-        // }
-        //$jsonBody = ConvertTo-Json -InputObject $body
-        //$Response = Invoke-RestMethod -Uri 'https://localhost:44314/api/tickets' -Method Put -ContentType 'application/json' -Body $jsonBody
-        //$Response
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
