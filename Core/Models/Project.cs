@@ -12,5 +12,6 @@ namespace Core.Models
 		[StringLength(50)]
 		public string Name { get; set; }
 		public List<Ticket> Tickets { get; set; }
+		
 	}
 }
