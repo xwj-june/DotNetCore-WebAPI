@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core.Models;
+using DataStore.EF;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +13,27 @@ namespace PlatformDemo.Controllers
     [Route("api/[controller]")]
     public class ProjectsController : ControllerBase
     {
+		private readonly BugsContext db;
+
+		public ProjectsController(BugsContext db)
+		{
+            this.db = db;
+		}
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok("Reading all the projects.");
+            return Ok(db.Projects.ToList());
         }
 
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id) //id from route
         {
-            return Ok($"Reading project #{id}.");
+            var project = db.Projects.Find(id);
+            if (project == null)
+                return NotFound();
+
+            return Ok(project);
         }
 
         /// <summary>
@@ -31,13 +44,14 @@ namespace PlatformDemo.Controllers
         [Route("/api/projects/{pid}/tickets")]
         //api/project/45/tickets
         //api/project/45/tickets?tid=123
-        public IActionResult GetProjectTIcket(int pId, [FromQuery] int tId) //[FromQuery] makes tId has to come from Query
+        public IActionResult GetProjectTIcket(int pId, [FromQuery] int tId)
         {
-            if (tId == 0)
+            var tickets = db.Tickets.Where(t => t.ProjectId == pId).ToList();
+            if (tickets == null || tickets.Count() <= 0)
             {
-                return Ok($"Reading all tickets belong to project {pId}");
+                return NotFound();
             }
-            return Ok($"Reading project {pId}, ticket #{tId}");
+            return Ok(tickets);
         }
 
         #region no common - model binding for complex type from both Route and Query
@@ -62,21 +76,46 @@ namespace PlatformDemo.Controllers
         #endregion
 
         [HttpPost]
-        public IActionResult Post()
+        public IActionResult Post([FromBody]Project project)
         {
-            return Ok("Creating a project.");
+            db.Projects.Add(project); //change tracker will mark this project as "Added". there are different states - added,modified,deleted etc.
+            db.SaveChanges();
+
+            return CreatedAtAction(nameof(GetById), 
+                new { id = project.ProjectId }, 
+                project);
         }
 
-        [HttpPut]
-        public IActionResult Put()
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, Project project)
         {
-            return Ok("Updating a project");
+            if (id != project.ProjectId) return BadRequest();
+
+            db.Entry(project).State = EntityState.Modified;
+			try
+			{
+                db.SaveChanges();
+            }
+			catch
+			{
+                if (db.Projects.Find(id) == null)
+                    return NotFound();
+				throw;
+			}
+
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return Ok($"Deleting project #{id}.");
+            var project = db.Projects.Find(id);
+            if (project == null) return NotFound();
+
+            db.Projects.Remove(project);
+            db.SaveChanges();
+
+            return Ok(project);
         }
 
     }

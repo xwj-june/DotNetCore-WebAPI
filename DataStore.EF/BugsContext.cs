@@ -12,7 +12,7 @@ namespace DataStore.EF
 
 		}
 
-		public DbSet<Project> Products { get; set; }
+		public DbSet<Project> Projects { get; set; }
 		public DbSet<Ticket> Tickets{ get; set; }
 
 		/// <summary>
