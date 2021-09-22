@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PlatformDemo.Controllers
+namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -42,8 +42,6 @@ namespace PlatformDemo.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("/api/projects/{pid}/tickets")]
-        //api/project/45/tickets
-        //api/project/45/tickets?tid=123
         public IActionResult GetProjectTIcket(int pId, [FromQuery] int tId)
         {
             var tickets = db.Tickets.Where(t => t.ProjectId == pId).ToList();

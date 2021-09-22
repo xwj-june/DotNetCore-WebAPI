@@ -1,78 +1,86 @@
 ﻿using Core.Models;
+using DataStore.EF;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PlatformDemo.Controllers
+namespace WebApi.Controllers
 {
-    //3. inherits ContorllerBase and decorate with ApiController
     [ApiController]
-    [Route("api/[controller]")] //attribute routing in Contorller
-    //[Version1DiscontinueResourceFilter] // only apply to this controller
-    public class TicketsController : ControllerBase //ControllerBase contains everything needs for Web API controller
+    [Route("api/[controller]")]
+    public class TicketsController : ControllerBase 
     {
+		private readonly BugsContext db;
+
+		public TicketsController(BugsContext db)
+		{
+            this.db = db;
+		}
+
         [HttpGet]
-        //[Route("api/tickets")] //Attribute routing in Method
-        public IActionResult Get() //IActionResult is a general type can hold different type of output like json
+        public IActionResult Get()
         {
-            return Ok("Reading all the tickets."); //return http code with content
+            return Ok(db.Tickets.ToList()); //return http code with content
         }
 
 
         [HttpGet("{id}")]
-        //[HttpGet]
-        //[Route("api/tickets/{id}")] //Attribute routing
         public IActionResult GetById(int id)
         {
-            return Ok($"Reading ticket #{id}.");
+            var ticket = db.Tickets.Find(id);
+            if (ticket == null) 
+                return NotFound();
+
+            return Ok(db.Tickets.Find(id));
         }
 
 
         [HttpPost]
-        //[Route("api/tickets")] //Attribute routing
         public IActionResult PostV1([FromBody] Ticket ticket)
         {
-            return Ok(ticket); // it will automaticlly serilize the object to json
+            db.Tickets.Add(ticket);
+            db.SaveChanges();
+
+            return CreatedAtAction(nameof(GetById),
+                new { id = ticket.ProjectId },
+                ticket);
+            
         }
 
-        //test above in PowerShell
-        // $body =@{
-        // ProjectId=1
-        // Title = "This is a title"
-        // Description = "this is a desc"
-        // }
-        //$jsonBody = ConvertTo-Json -InputObject $body
-        //$Response = Invoke-RestMethod -Uri 'https://localhost:44314/api/tickets' -Method Post -ContentType 'application/json' -Body $jsonBody
-        //$Response
-
-
-        [HttpPut]
-        //[Route("api/tickets")] //Attribute routing
-        public IActionResult Put([FromBody] Ticket ticket)
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Ticket ticket)
         {
-            return Ok(ticket);
+            if (id != ticket.TicketId) 
+                return BadRequest();
+
+            db.Entry(ticket).State = EntityState.Modified;
+            try
+            {
+                db.SaveChanges();
+            }
+            catch
+            {
+                if (db.Tickets.Find(id) == null)
+                    return NotFound();
+                throw;
+            }
+
+            return NoContent();
         }
-
-
-        //test above in PowerShell
-        // $body =@{
-        // TicketId=100
-        // ProjectId=1
-        // Title = "This is a title"
-        // Description = "this is a desc"
-        // }
-        //$jsonBody = ConvertTo-Json -InputObject $body
-        //$Response = Invoke-RestMethod -Uri 'https://localhost:44314/api/tickets' -Method Put -ContentType 'application/json' -Body $jsonBody
-        //$Response
 
         [HttpDelete("{id}")]
-        //[HttpDelete]
-        //[Route("api/tickets/{id}")] //Attribute routing
         public IActionResult Delete(int id)
         {
-            return Ok($"Deleting ticket #{id}.");
+            var ticket = db.Tickets.Find(id);
+            if (ticket == null) return NotFound();
+
+            db.Tickets.Remove(ticket);
+            db.SaveChanges();
+
+            return Ok(ticket);
         }
 
     }
