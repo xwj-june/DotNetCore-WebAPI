@@ -20,16 +20,16 @@ namespace WebApi.Controllers
             this.db = db;
 		}
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(db.Projects.ToList());
+            return Ok(await db.Projects.ToListAsync());
         }
 
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id) //id from route
+        public async Task<IActionResult> GetById(int id) //id from route
         {
-            var project = db.Projects.Find(id);
+            var project = await db.Projects.FindAsync(id);
             if (project == null)
                 return NotFound();
 
@@ -42,9 +42,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("/api/projects/{pid}/tickets")]
-        public IActionResult GetProjectTIcket(int pId, [FromQuery] int tId)
+        public async Task<IActionResult> GetProjectTIcket(int pId, [FromQuery] int tId)
         {
-            var tickets = db.Tickets.Where(t => t.ProjectId == pId).ToList();
+            var tickets = await db.Tickets.Where(t => t.ProjectId == pId).ToListAsync();
             if (tickets == null || tickets.Count() <= 0)
             {
                 return NotFound();
@@ -74,29 +74,29 @@ namespace WebApi.Controllers
         #endregion
 
         [HttpPost]
-        public IActionResult Post([FromBody]Project project)
+        public async Task<IActionResult> Post([FromBody]Project project)
         {
             db.Projects.Add(project); //change tracker will mark this project as "Added". there are different states - added,modified,deleted etc.
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), 
-                new { id = project.ProjectId }, 
+            return CreatedAtAction(nameof(GetById),
+                new { id = project.ProjectId },
                 project);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Project project)
+        public async Task<IActionResult> Put(int id, Project project)
         {
             if (id != project.ProjectId) return BadRequest();
 
             db.Entry(project).State = EntityState.Modified;
 			try
 			{
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
 			catch
 			{
-                if (db.Projects.Find(id) == null)
+                if (await db.Projects.FindAsync(id) == null)
                     return NotFound();
 				throw;
 			}
@@ -105,13 +105,13 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var project = db.Projects.Find(id);
+            var project = await db.Projects.FindAsync(id);
             if (project == null) return NotFound();
 
             db.Projects.Remove(project);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return Ok(project);
         }

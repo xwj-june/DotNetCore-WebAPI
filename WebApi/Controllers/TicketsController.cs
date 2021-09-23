@@ -11,7 +11,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TicketsController : ControllerBase 
+    public class TicketsController : ControllerBase
     {
 		private readonly BugsContext db;
 
@@ -21,49 +21,49 @@ namespace WebApi.Controllers
 		}
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(db.Tickets.ToList()); //return http code with content
+            return Ok(await db.Tickets.ToListAsync()); //return http code with content
         }
 
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var ticket = db.Tickets.Find(id);
-            if (ticket == null) 
+            var ticket = await db.Tickets.FindAsync(id);
+            if (ticket == null)
                 return NotFound();
 
-            return Ok(db.Tickets.Find(id));
+            return Ok(await db.Tickets.FindAsync(id));
         }
 
 
         [HttpPost]
-        public IActionResult PostV1([FromBody] Ticket ticket)
+        public async Task<IActionResult> Post([FromBody] Ticket ticket)
         {
             db.Tickets.Add(ticket);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetById),
                 new { id = ticket.ProjectId },
                 ticket);
-            
+
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Ticket ticket)
+        public async Task<IActionResult> Put(int id, [FromBody] Ticket ticket)
         {
-            if (id != ticket.TicketId) 
+            if (id != ticket.TicketId)
                 return BadRequest();
 
             db.Entry(ticket).State = EntityState.Modified;
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch
             {
-                if (db.Tickets.Find(id) == null)
+                if (await db.Tickets.FindAsync(id) == null)
                     return NotFound();
                 throw;
             }
@@ -72,13 +72,13 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var ticket = db.Tickets.Find(id);
+            var ticket = await db.Tickets.FindAsync(id);
             if (ticket == null) return NotFound();
 
             db.Tickets.Remove(ticket);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return Ok(ticket);
         }
