@@ -26,6 +26,11 @@ namespace Core.Models
 		public DateTime? DueDate { get; set; }
 		public Project Project { get; set; }
 
+		public bool ValidateDescription()
+        {
+			return !string.IsNullOrWhiteSpace(Description);
+        }
+
 		/// <summary>
 		/// When creating a ticket, if due date is entered, it has to be in the future.
 		/// </summary>
