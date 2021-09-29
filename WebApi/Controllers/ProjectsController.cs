@@ -11,7 +11,7 @@ namespace WebApi.Controllers
 {
     [ApiVersion("1.0")]
     [ApiController]
-    [Route("api/v{v:apiVersion}/[controller]")]
+    [Route("api/[controller]")]
     public class ProjectsController : ControllerBase
     {
 		private readonly BugsContext db;

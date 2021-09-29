@@ -41,7 +41,12 @@ namespace PlatformDemo
                 options.ReportApiVersions = true;
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+                //Using header to determine api version
                 //options.ApiVersionReader = new HeaderApiVersionReader("X-API-Version");
+                //Test: X-API-Version 1.0/2.0
+
+                //Using query string to determine api version
+                //https://localhost:44314/api/tickets?api-version=2.0
             });
         }
 
