@@ -25,7 +25,6 @@ namespace PlatformDemo
         {
 			if (_env.IsDevelopment())
 			{
-
                 //Inject context to DI
                 services.AddDbContext<BugsContext>(options =>
                 {
@@ -33,7 +32,6 @@ namespace PlatformDemo
                 });
 			}
 
-            //2. Add the controller middleware dependency and use the default behavior
             services.AddControllers();
 
             services.AddApiVersioning(options =>
@@ -48,6 +46,10 @@ namespace PlatformDemo
                 //Using query string to determine api version
                 //https://localhost:44314/api/tickets?api-version=2.0
             });
+
+            services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'v'VVV");
+
+            services.AddSwaggerGen();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BugsContext context)
@@ -59,13 +61,21 @@ namespace PlatformDemo
                 //Create the in-memory database for dev environment
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
+
+
+                //Configure OpenAPI
+                app.UseSwagger();
+                app.UseSwaggerUI(
+                    options => {
+                        options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1");
+                    });
+
             }
 
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                //1. Ues controller middleware
                 endpoints.MapControllers();
             });
         }
