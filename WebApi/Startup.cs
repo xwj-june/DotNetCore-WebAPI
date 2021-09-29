@@ -6,6 +6,7 @@ using DataStore.EF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,6 +36,13 @@ namespace PlatformDemo
             //2. Add the controller middleware dependency and use the default behavior
             services.AddControllers();
 
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+                options.ApiVersionReader = new HeaderApiVersionReader("X-API-Version");
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BugsContext context)
@@ -45,7 +53,7 @@ namespace PlatformDemo
 
                 //Create the in-memory database for dev environment
                 context.Database.EnsureDeleted();
-                context.Database.EnsureCreated(); 
+                context.Database.EnsureCreated();
             }
 
             app.UseRouting();

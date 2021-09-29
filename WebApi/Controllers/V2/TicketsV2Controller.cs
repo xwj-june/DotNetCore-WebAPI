@@ -10,8 +10,9 @@ using WebApi.Filters.V2;
 
 namespace WebApi.Controllers.V2
 {
+    [ApiVersion("2.0")]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/tickets")]
     public class TicketsV2Controller : ControllerBase
     {
 		private readonly BugsContext db;
