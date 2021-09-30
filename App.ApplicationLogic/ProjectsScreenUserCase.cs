@@ -1,13 +1,13 @@
-﻿using App.Repository;
-using App.Repository.ApiClient;
+﻿using MyApp.Repository;
+using MyApp.Repository.ApiClient;
 using Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace App.ApplicationLogic
+namespace MyApp.ApplicationLogic
 {
-    public class ProjectsScreenUserCase
+    public class ProjectsScreenUserCase : IProjectsScreenUserCase
     {
         private readonly IProjectRepository projectRepository;
 

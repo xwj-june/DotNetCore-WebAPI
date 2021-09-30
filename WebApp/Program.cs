@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MyApp.ApplicationLogic;
+using MyApp.Repository;
+using MyApp.Repository.ApiClient;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -16,6 +19,10 @@ namespace WebApp
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
+
+            builder.Services.AddTransient<IProjectsScreenUserCase, ProjectsScreenUserCase>();
+            builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+            builder.Services.AddSingleton<IWebApiExecuter, WebApiExecuter>(sp => new WebApiExecuter("https://localhost:44314", new HttpClient()));
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
