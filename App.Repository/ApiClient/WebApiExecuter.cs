@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace App.Repository.ApiClient
 {
-    public class WebApiExecuter
+    public class WebApiExecuter : IWebApiExecuter
     {
         private readonly string baseUrl;
         private readonly HttpClient httpClient;
@@ -42,7 +42,7 @@ namespace App.Repository.ApiClient
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task InvokeDelete<T>(string uri)
+        public async Task InvokeDelete(string uri)
         {
             var response = await httpClient.DeleteAsync(GetUrl(uri));
             response.EnsureSuccessStatusCode();
