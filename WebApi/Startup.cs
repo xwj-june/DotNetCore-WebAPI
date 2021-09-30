@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace PlatformDemo
 {
@@ -49,7 +50,10 @@ namespace PlatformDemo
 
             services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'v'VVV");
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options => {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "My Web API v1", Version = "version 1" });
+                options.SwaggerDoc("v2", new OpenApiInfo { Title = "My Web API v2", Version = "version 2" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BugsContext context)
@@ -62,14 +66,13 @@ namespace PlatformDemo
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
 
-
                 //Configure OpenAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(
                     options => {
                         options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1");
+                        options.SwaggerEndpoint("/swagger/v2/swagger.json", "WebAPI v2");
                     });
-
             }
 
             app.UseRouting();
