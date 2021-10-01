@@ -1,5 +1,6 @@
 ﻿@page "/projects/{projectId:int}/tickets"
 
+@inject NavigationManager NavigationManager;
 @inject ITicketsScreenUseCases TicketsScreenUseCases;
 @inject IProjectsScreenUserCase ProjectsScreenUserCase;
 
@@ -40,6 +41,7 @@
 			}
 		</tbody>		
 	</table>
+	<button class="btn btn-primary" @onclick="AddTicket">Add Ticket</button>
 }
 
 @code {
@@ -75,6 +77,11 @@
 	private async Task OnSearch()
 	{
 		tickets = await TicketsScreenUseCases.SearchTickets(searchFilter);
+	}
+
+	private void AddTicket()
+	{
+		NavigationManager.NavigateTo($"/projects/{ProjectId}/addticket");
 	}
 
 }

@@ -1,7 +1,9 @@
 ﻿@page "/tickets/{ticketId:int}"
+@page "/projects/{projectId:int}/addticket"
 
 @inject NavigationManager NavigationManager
-@inject ITicketsScreenUseCases TicketScreenUserCases
+@inject ITicketsScreenUseCases TicketsScreenUseCases
+@inject ITicketScreenUseCases TicketScreenUseCases
 
 <h3>Ticket</h3>
 <br />
@@ -55,14 +57,21 @@
 	AlertComponent alertComponent;
 
 	[Parameter]
-	public int TicketId { get; set; }
+	public int? TicketId { get; set; }
+
+	[Parameter]
+	public int? ProjectId { get; set; }
 
 	protected override async Task OnParametersSetAsync()
 	{
-		ticket = await TicketScreenUserCases.ViewTicketById(TicketId);
+		if(TicketId.HasValue)
+			ticket = await TicketsScreenUseCases.ViewTicketById(TicketId.Value);
+
+		if(ProjectId.HasValue && ticket == null)
+			ticket = new Ticket() { ProjectId = this.ProjectId.Value };
 	}
 
-	void Save()
+	async Task Save()
 	{
 		bool bSuccess = true;
 
@@ -99,9 +108,16 @@
 
 		if (bSuccess)
 		{
-			TicketScreenUserCases.UpdateTicket(ticket);
-			NavigationManager.NavigateTo($"/projects/{ticket.ProjectId}/tickets");
+			if (TicketId.HasValue)
+			{
+				await TicketsScreenUseCases.UpdateTicket(ticket);	
+			}
+			else
+			{
+				await TicketScreenUseCases.AddTicket(ticket);
+			}
+
+			NavigationManager.NavigateTo($"/projects/{ProjectId}/tickets");
 		}
 	}
 }
-

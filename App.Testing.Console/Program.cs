@@ -134,7 +134,7 @@ async Task GetProjectTickets(int id)
     Console.WriteLine($"Project: {project.Name}");
 
     ProjectRepository repository = new(apiExecuter);
-    var tickets = await repository.GetProjectTicketsAsync(id);
+    var tickets = await repository.GetProjectTicketsAsync(id, "");
     foreach (var ticket in tickets)
     {
         Console.WriteLine($"    Ticket: {ticket.Title}");
