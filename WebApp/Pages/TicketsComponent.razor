@@ -4,7 +4,6 @@
 @inject IProjectsScreenUserCase ProjectsScreenUserCase;
 
 <h3>Tickets</h3>
-@*<h4>Project ID: @ProjectId</h4>*@
 
 <div class="row">
 	<div class="col-auto">
@@ -51,7 +50,6 @@
 	[Parameter]
 	public int ProjectId { get; set; }
 
-	
 	bool viewMyTickets = false;
 	public bool ViewMyTickets 
 	{ 
@@ -66,7 +64,6 @@
 					tickets = await TicketsScreenUseCases.ViewTickets(ProjectId);
 				StateHasChanged();
 			});
-		
 		}
 	}
 

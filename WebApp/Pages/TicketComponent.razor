@@ -1,0 +1,107 @@
+﻿@page "/tickets/{ticketId:int}"
+
+@inject NavigationManager NavigationManager
+@inject ITicketsScreenUseCases TicketScreenUserCases
+
+<h3>Ticket</h3>
+<br />
+
+<AlertComponent @ref="alertComponent"></AlertComponent>
+
+@if (ticket != null)
+{
+	<EditForm Model="ticket" OnValidSubmit="Save">
+		<DataAnnotationsValidator></DataAnnotationsValidator>
+		<ValidationSummary></ValidationSummary>
+
+		<div class="mb-3 row">
+			<label for="title" class="col-sm-2 col-form-label">Title</label>
+			<div class="col-sm-10">
+				<InputText type="text" class="form-control-plaintext" @bind-Value="ticket.Title" id="title"></InputText>
+			</div>
+		</div>
+		<div class="mb-3 row">
+			<label for="description" class="col-sm-2 col-form-label">Descrption</label>
+			<div class="col-sm-10">
+				<InputText type="text" class="form-control-plaintext" @bind-Value="ticket.Description" id="description"></InputText>
+			</div>
+		</div>
+		<div class="mb-3 row">
+			<label for="owner" class="col-sm-2 col-form-label">Owner</label>
+			<div class="col-sm-10">
+				<InputText type="text" class="form-control-plaintext" @bind-Value="ticket.Owner" id="owner"></InputText>
+			</div>
+		</div>
+		<div class="mb-3 row">
+			<label for="reportdate" class="col-sm-2 col-form-label">Report Date</label>
+			<div class="col-sm-10">
+				<InputDate type="text" class="form-control-plaintext" @bind-Value="ticket.ReportDate" id="reportdate"></InputDate>
+			</div>
+		</div>
+		<div class="mb-3 row">
+			<label for="duedate" class="col-sm-2 col-form-label">Due Date</label>
+			<div class="col-sm-10">
+				<InputDate type="text" class="form-control-plaintext" @bind-Value="ticket.DueDate" id="duedate"></InputDate>
+			</div>
+		</div>
+
+		<button class="btn btn-primary" type="submit">Save</button>
+	</EditForm>
+}
+
+@code {
+
+	Ticket ticket;
+	AlertComponent alertComponent;
+
+	[Parameter]
+	public int TicketId { get; set; }
+
+	protected override async Task OnParametersSetAsync()
+	{
+		ticket = await TicketScreenUserCases.ViewTicketById(TicketId);
+	}
+
+	void Save()
+	{
+		bool bSuccess = true;
+
+		if (!ticket.ValidateDescription())
+		{
+			alertComponent.ErrorMessage = "Description is required.";
+			alertComponent.Show();
+			bSuccess = false;
+		}
+		if (!ticket.ValidateFutureDueDate())
+		{
+			alertComponent.ErrorMessage = "The due date must be inthe future.";
+			alertComponent.Show();
+			bSuccess = false;
+		}
+		if (!ticket.ValidateReportDatePresence())
+		{
+			alertComponent.ErrorMessage = "The Report Date is required.";
+			alertComponent.Show();
+			bSuccess = false;
+		}
+		if (!ticket.ValidateDueDatePresence())
+		{
+			alertComponent.ErrorMessage = "The Due Date is required.";
+			alertComponent.Show();
+			bSuccess = false;
+		}
+		if (!ticket.ValidateDueDateAfterReportDate())
+		{
+			alertComponent.ErrorMessage = "The Due Date must be later than the Report Date.";
+			alertComponent.Show();
+			bSuccess = false;
+		}
+
+		if (bSuccess)
+		{
+			TicketScreenUserCases.UpdateTicket(ticket);
+			NavigationManager.NavigateTo($"/projects/{ticket.ProjectId}/tickets");
+		}
+	}
+}
+

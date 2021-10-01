@@ -38,5 +38,16 @@ namespace MyApp.ApplicationLogic
 		{
 			return await projectRepository.GetProjectTicketsAsync(projectId, ownerName);
 		}
+
+		public async Task<Ticket> ViewTicketById(int ticketId)
+		{
+			return await ticketRepository.GetByIdAsync(ticketId);
+		}
+
+		public async Task UpdateTicket(Ticket ticket)
+		{
+			await ticketRepository.UpdateAsync(ticket);
+		}
+
 	}
 }
