@@ -27,9 +27,15 @@ namespace MyApp.Repository
             return await webApiExecuter.InvokeGet<Project>($"api/projects/{id}");
         }
 
-        public async Task<IEnumerable<Ticket>> GetProjectTicketsAsync(int projectId)
+        public async Task<IEnumerable<Ticket>> GetProjectTicketsAsync(int projectId, string filter)
         {
-            return await webApiExecuter.InvokeGet<IEnumerable<Ticket>>($"api/projects/{projectId}/tickets");
+            string uri = $"api/projects/{projectId}/tickets";
+			if (!string.IsNullOrWhiteSpace(filter))
+			{
+                uri += $"?owner={filter}&api-version=2.0";
+            }
+
+            return await webApiExecuter.InvokeGet<IEnumerable<Ticket>>(uri);
         }
 
         public async Task<int> CreateAsync(Project project)

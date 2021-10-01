@@ -36,7 +36,9 @@ namespace DataStore.EF
 				new Ticket() { TicketId = 1, Title = "Bug #1", ProjectId= 1, Owner="JJ", ReportDate = new DateTime(2021,11,11), DueDate = new DateTime(2021,12,12) },
 				new Ticket() { TicketId = 2, Title = "Bug #2", ProjectId= 1, Owner = "JJ", ReportDate = new DateTime(2021, 11, 11), DueDate = new DateTime(2021, 12, 12) },
 				new Ticket() { TicketId = 3, Title = "Bug #3", ProjectId= 2 },
-				new Ticket() { TicketId = 4, Title = "New Bug #4", Description="this is a new bug", ProjectId = 2 }
+				new Ticket() { TicketId = 4, Title = "New Bug #4", Description="this is a new bug", ProjectId = 2 },
+				new Ticket() { TicketId = 5, Title = "Bug #5", ProjectId = 1, Owner = "XX", ReportDate = new DateTime(2021, 11, 11), DueDate = new DateTime(2021, 12, 12) },
+				new Ticket() { TicketId = 6, Title = "Bug #6", ProjectId = 1, Owner = "WW", ReportDate = new DateTime(2021, 11, 11), DueDate = new DateTime(2021, 12, 12) }
 				);
 		}
 	}
