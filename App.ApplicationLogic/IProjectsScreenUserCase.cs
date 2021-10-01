@@ -7,5 +7,5 @@ namespace MyApp.ApplicationLogic
     public interface IProjectsScreenUserCase
     {
         Task<IEnumerable<Project>> ViewProjectsAsync();
-    }
+	}
 }

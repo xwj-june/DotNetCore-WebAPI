@@ -1,0 +1,16 @@
+﻿
+@if(Ticket != null){
+	<tr>
+		<td>@Ticket.Title</td>
+		<td>@Ticket.Owner</td>
+		<td>@(Ticket.ReportDate.HasValue ? Ticket.ReportDate.Value.ToShortDateString():string.Empty)</td>
+		<td>@(Ticket.DueDate.HasValue ? Ticket.DueDate.Value.ToShortDateString():string.Empty)</td>
+	</tr>
+}
+
+@code {
+
+	[Parameter]
+	public Ticket Ticket { get; set; }
+
+}

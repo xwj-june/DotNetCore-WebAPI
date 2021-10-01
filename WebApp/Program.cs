@@ -20,11 +20,15 @@ namespace WebApp
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddTransient<IProjectsScreenUserCase, ProjectsScreenUserCase>();
-            builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
             builder.Services.AddSingleton<IWebApiExecuter, WebApiExecuter>(sp => new WebApiExecuter("https://localhost:44314", new HttpClient()));
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddTransient<IProjectsScreenUserCase, ProjectsScreenUserCase>();
+            builder.Services.AddTransient<ITicketsScreenUseCases, TicketsScreenUseCases>();
+
+            builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+            builder.Services.AddTransient<ITicketRepository, TicketRepository>();
+            
+            //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();
         }
