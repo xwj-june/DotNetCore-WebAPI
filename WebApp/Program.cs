@@ -20,7 +20,7 @@ namespace WebApp
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddSingleton<IWebApiExecuter, WebApiExecuter>(sp => new WebApiExecuter("https://localhost:44314", new HttpClient(), "secretkey"));
+            builder.Services.AddSingleton<IWebApiExecuter, WebApiExecuter>(sp => new WebApiExecuter("https://localhost:44314", new HttpClient(), "blazorwasm", "secretkey"));
 
             builder.Services.AddTransient<IProjectsScreenUserCase, ProjectsScreenUserCase>();
             builder.Services.AddTransient<ITicketsScreenUseCases, TicketsScreenUseCases>();
