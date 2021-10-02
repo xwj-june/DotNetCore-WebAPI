@@ -6,12 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApi.Filters;
 
 namespace WebApi.Controllers
 {
     [ApiVersion("1.0")]
     [ApiController]
     [Route("api/[controller]")]
+    [APIKeyAuthFilterAttribute]
     public class TicketsController : ControllerBase
     {
 		private readonly BugsContext db;
