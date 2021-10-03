@@ -15,7 +15,7 @@ namespace WebApi.Controllers.V2
     [ApiVersion("2.0")]
     [ApiController]
     [Route("api/tickets")]
-    [APIKeyAuthFilterAttribute]
+    [CustomTokenAuthFilter]
     public class TicketsV2Controller : ControllerBase
     {
 		private readonly BugsContext db;

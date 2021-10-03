@@ -13,7 +13,7 @@ namespace WebApi.Controllers
     [ApiVersion("1.0")]
     [ApiController]
     [Route("api/[controller]")]
-    [APIKeyAuthFilterAttribute]
+    [CustomTokenAuthFilter]
     public class ProjectsController : ControllerBase
     {
 		private readonly BugsContext db;
