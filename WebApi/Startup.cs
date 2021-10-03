@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using WebApi.Auth;
 
 namespace PlatformDemo
 {
@@ -24,6 +25,9 @@ namespace PlatformDemo
 		}
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ICustomTokenManager, CustomTokenManager>();
+            services.AddSingleton<ICustomUserManager, CustomUserManager>();
+
 			if (_env.IsDevelopment())
 			{
                 //Inject context to DI
