@@ -18,7 +18,7 @@ namespace WebApi.Auth
 
         public bool VerifyToken(string token)
         {
-            return tokens.Any(x => token != null && token.Contains(x.TokenString));
+            return tokens.Any(x => token != null && token.Contains(x.TokenString) && x.ExpiryDate > DateTime.Now);
         }
 
         public string GetUserInfoByToken(string tokenString)

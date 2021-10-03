@@ -18,16 +18,23 @@ namespace WebApi.Controllers.Auth
             this.customUserManager = customUserManager;
             this.customTokenManager = customTokenManager;
         }
+
+        [HttpPost]
+        [Route("/authenticate")]
         public Task<string> Authenticate(string userName, string password)
         {
             return Task.FromResult(customUserManager.Authenticate(userName, password));
         }
 
+        [HttpGet]
+        [Route("/verifytoken")]
         public Task<bool> Vertify(string token)
         {
             return Task.FromResult(customTokenManager.VerifyToken(token));
         }
 
+        [HttpGet]
+        [Route("/getuserinfo")]
         public Task<string> GetUserInfoByToken(string token)
         {
             return Task.FromResult(customTokenManager.GetUserInfoByToken(token));
