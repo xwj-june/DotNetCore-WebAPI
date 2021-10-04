@@ -21,9 +21,9 @@ namespace WebApi.Controllers.Auth
 
         [HttpPost]
         [Route("/authenticate")]
-        public Task<string> Authenticate(string userName, string password)
+        public Task<string> Authenticate(UserCredential userCredential)
         {
-            return Task.FromResult(customUserManager.Authenticate(userName, password));
+            return Task.FromResult(customUserManager.Authenticate(userCredential.userName, userCredential.password));
         }
 
         [HttpGet]
@@ -39,5 +39,11 @@ namespace WebApi.Controllers.Auth
         {
             return Task.FromResult(customTokenManager.GetUserInfoByToken(token));
         }
+    }
+
+    public class UserCredential
+    {
+        public string userName { get; set; }
+        public string password { get; set; }
     }
 }
