@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,11 +20,18 @@ namespace WebApp
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
+
+            #region AuthenticationStateProvider
+            builder.Services.AddOptions();
+            builder.Services.AddAuthorizationCore();
+            builder.Services.AddSingleton<AuthenticationStateProvider, CustomeToekAuthenticationStateProvider>();
+
             builder.Services.AddSingleton<ITokenRepository, TokenRepository>();
             builder.Services.AddSingleton<IWebApiExecuter, WebApiExecuter>(
                     sp => new WebApiExecuter("https://localhost:44314", new HttpClient(),
                     sp.GetRequiredService<ITokenRepository>()
                 ));
+            #endregion
 
             builder.Services.AddTransient<IAuthenticateUseCases, AuthenticateUseCases>();
             builder.Services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
