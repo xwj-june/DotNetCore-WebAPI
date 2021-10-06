@@ -11,7 +11,9 @@ namespace WebApp
     {
         public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var userName = "Frank";
+
+            //var userName = ""; //not authenticated
+            var userName = "june"; //authenticated
             if (!string.IsNullOrWhiteSpace(userName))
             {
                 var claim = new Claim(ClaimTypes.Name, userName);
@@ -22,7 +24,7 @@ namespace WebApp
             }
             else
             {
-                return Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+                return Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
             }
         }
     }
