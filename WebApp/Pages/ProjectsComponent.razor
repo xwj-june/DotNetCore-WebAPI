@@ -22,13 +22,21 @@
 }
 
 Token:  @token
+userName:  @userName
 
 @code {
     IEnumerable<Project> projects;
     string token;
+    string userName;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> authenticationState { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         projects = await ProjectsScreenUserCase.ViewProjectsAsync();
+        var state = await authenticationState;
+        userName = state.User.Identity.Name;
     }
+
 }
