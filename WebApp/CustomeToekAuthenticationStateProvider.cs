@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using MyApp.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,22 +10,28 @@ namespace WebApp
 {
     public class CustomeToekAuthenticationStateProvider : AuthenticationStateProvider
     {
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
-        {
+        private readonly ITokenRepository tokenRepository;
+        private readonly IAuthenticationRepository authenticationRepository;
 
-            //var userName = ""; //not authenticated
-            var userName = "june"; //authenticated
+        public CustomeToekAuthenticationStateProvider(ITokenRepository tokenRepository, IAuthenticationRepository authenticationRepository)
+        {
+            this.tokenRepository = tokenRepository;
+            this.authenticationRepository = authenticationRepository;
+        }
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        {
+            var userName = await authenticationRepository.GetUserInfoAsync(await tokenRepository.GetToken());
             if (!string.IsNullOrWhiteSpace(userName))
             {
                 var claim = new Claim(ClaimTypes.Name, userName);
                 var identity = new ClaimsIdentity(new[] { claim }, "Custom Token Auth");
                 var principle = new ClaimsPrincipal(identity);
 
-                return Task.FromResult(new AuthenticationState(principle));
+                return new AuthenticationState(principle);
             }
             else
             {
-                return Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
+                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
         }
     }

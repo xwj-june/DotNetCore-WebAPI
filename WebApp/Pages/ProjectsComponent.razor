@@ -1,5 +1,6 @@
 ﻿@page "/"
 
+@attribute [Authorize]
 @inject IAuthenticateUseCases AuthenticateUseCase
 @inject IProjectsScreenUserCase ProjectsScreenUserCase
 
@@ -28,7 +29,6 @@ Token:  @token
 
     protected override async Task OnInitializedAsync()
     {
-        token = await AuthenticateUseCase.LoginAsync("june", "password");
         projects = await ProjectsScreenUserCase.ViewProjectsAsync();
     }
 }

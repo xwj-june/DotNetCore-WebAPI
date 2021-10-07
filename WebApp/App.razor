@@ -1,10 +1,9 @@
-
-<CascadingAuthenticationState> @*Pull state and cascade state down*@
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-                    You are not logged in yet.
+                    <LoginComponent></LoginComponent>
                 </NotAuthorized>
             </AuthorizeRouteView>
         </Found>

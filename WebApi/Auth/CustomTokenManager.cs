@@ -23,11 +23,9 @@ namespace WebApi.Auth
 
         public string GetUserInfoByToken(string tokenString)
         {
-            var token = tokens.FirstOrDefault(x => tokenString != null &&  tokenString.Contains(x.TokenString));
-            if (token != null)
-            {
-                return token.UserName;
-            }
+            var token = tokens.FirstOrDefault(x => tokenString != null && tokenString.Contains(x.TokenString));
+            if (token != null) return token.UserName;
+
             return string.Empty;
         }
     }

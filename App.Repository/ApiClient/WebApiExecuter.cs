@@ -78,12 +78,12 @@ namespace MyApp.Repository.ApiClient
             }
         }
 
-        private void AddTokenHeader()
+        private async Task AddTokenHeader()
         {
-            if (tokenRepository != null && !string.IsNullOrWhiteSpace(tokenRepository.Token))
+            if (tokenRepository != null && !string.IsNullOrWhiteSpace(await tokenRepository.GetToken()))
             {
                 httpClient.DefaultRequestHeaders.Remove("TokenHeader");
-                httpClient.DefaultRequestHeaders.Add("TokenHeader", tokenRepository.Token);
+                httpClient.DefaultRequestHeaders.Add("TokenHeader", await tokenRepository.GetToken());
             }
         }
     }

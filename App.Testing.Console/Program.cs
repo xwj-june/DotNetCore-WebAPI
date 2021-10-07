@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 HttpClient httpClient = new();
-IWebApiExecuter apiExecuter = new WebApiExecuter("https://localhost:44314", httpClient, new TokenRepository());
+IWebApiExecuter apiExecuter = new WebApiExecuter("https://localhost:44314", httpClient, new TokenRepository(null));
 
 
 await TestTickets();

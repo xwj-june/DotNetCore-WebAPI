@@ -33,7 +33,7 @@ namespace WebApi.Controllers.Auth
             return Task.FromResult(customTokenManager.VerifyToken(token));
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("/getuserinfo")]
         public Task<string> GetUserInfoByToken(string token)
         {

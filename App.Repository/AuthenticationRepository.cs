@@ -21,13 +21,18 @@ namespace MyApp.Repository
         public async Task<string> LoginAsync(string userName, string password)
         {
             var token = await this.webApiExecuter.InvokePostReturnString("authenticate", new { userName = userName, password = password });
-            tokenRepository.Token = token;
+            await tokenRepository.SetToken(token);
+            if (string.IsNullOrWhiteSpace(token) || token == "\"\"") return null;
+
             return token;
         }
 
         public async Task<string> GetUserInfoAsync(string token)
         {
-            return await this.webApiExecuter.InvokePostReturnString("getuserinfo", new { token = token });
+            var userName = await this.webApiExecuter.InvokePostReturnString("getuserinfo", new { token = token });
+            if (string.IsNullOrWhiteSpace(token) || token == "\"\"") return null;
+
+            return userName;
         }
     }
 }

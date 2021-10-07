@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Authorization
-
-@page "/projects/{projectId:int}/tickets"
+﻿@page "/projects/{projectId:int}/tickets"
 
 @inject NavigationManager NavigationManager;
 @inject ITicketsScreenUseCases TicketsScreenUseCases;
@@ -50,42 +48,47 @@
 
 @code {
 
-	IEnumerable<Ticket> tickets;
-	string searchFilter;
+    IEnumerable<Ticket> tickets;
+    string searchFilter;
 
-	[Parameter]
-	public int ProjectId { get; set; }
+    [Parameter]
+    public int ProjectId { get; set; }
 
-	bool viewMyTickets = false;
-	public bool ViewMyTickets
-	{
-		get => viewMyTickets;
-		set
-		{
-			viewMyTickets = value;
-			Task.Run(async () => {
-				if (viewMyTickets)
-					tickets = await TicketsScreenUseCases.ViewOwnersTickets(ProjectId, "XX");
-				else
-					tickets = await TicketsScreenUseCases.ViewTickets(ProjectId);
-				StateHasChanged();
-			});
-		}
-	}
+    bool viewMyTickets = false;
+    public bool ViewMyTickets
+    {
+        get => viewMyTickets;
+        set
+        {
+            viewMyTickets = value;
+            Task.Run(async () => {
+                if (viewMyTickets)
+                    tickets = await TicketsScreenUseCases.ViewOwnersTickets(ProjectId, "XX");
+                else
+                    tickets = await TicketsScreenUseCases.ViewTickets(ProjectId);
+                StateHasChanged();
+            });
+        }
+    }
 
-	protected override async Task OnParametersSetAsync()
-	{
-		tickets = await TicketsScreenUseCases.ViewTickets(ProjectId);
-	}
+    protected override async Task OnParametersSetAsync()
+    {
+        tickets = await TicketsScreenUseCases.ViewTickets(ProjectId);
+        Console.WriteLine($"ProjectId is set: {ProjectId}, tickets are listed below:");
+        foreach (var ticket in tickets)
+        {
+            Console.WriteLine($"  ticket tile: {ticket.Title}");
+        }
+    }
 
-	private async Task OnSearch()
-	{
-		tickets = await TicketsScreenUseCases.SearchTickets(searchFilter);
-	}
+    private async Task OnSearch()
+    {
+        tickets = await TicketsScreenUseCases.SearchTickets(searchFilter);
+    }
 
-	private void AddTicket()
-	{
-		NavigationManager.NavigateTo($"/projects/{ProjectId}/addticket");
-	}
+    private void AddTicket()
+    {
+        NavigationManager.NavigateTo($"/projects/{ProjectId}/addticket");
+    }
 
 }
