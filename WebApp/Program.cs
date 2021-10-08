@@ -24,7 +24,8 @@ namespace WebApp
             #region AuthenticationStateProvider
             builder.Services.AddOptions();
             builder.Services.AddAuthorizationCore();
-            builder.Services.AddSingleton<AuthenticationStateProvider, CustomeToekAuthenticationStateProvider>();
+            //builder.Services.AddSingleton<AuthenticationStateProvider, CustomeToekAuthenticationStateProvider>();
+            builder.Services.AddSingleton<AuthenticationStateProvider, JwtTokenAuthenticationStateProvider>();
 
             builder.Services.AddSingleton<ITokenRepository, TokenRepository>();
             builder.Services.AddSingleton<IWebApiExecuter, WebApiExecuter>(

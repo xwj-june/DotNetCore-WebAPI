@@ -25,7 +25,7 @@ namespace PlatformDemo
 		}
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ICustomTokenManager, CustomTokenManager>();
+            services.AddSingleton<ICustomTokenManager, JwtTokenManager>();
             services.AddSingleton<ICustomUserManager, CustomUserManager>();
 
 			if (_env.IsDevelopment())
